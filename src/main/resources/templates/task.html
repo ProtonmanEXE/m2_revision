@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmins:th="https://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-image: url('/Background.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        table, th, td {
+            border: 2px solid darkgoldenrod;
+        }
+    </style>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <title>To-do</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="row mt-5">
+            <div class="col d-flex justify-content-center">
+                <h1><b><span th:text="${userName}"></span>'s To-do List</b></h1>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col d-flex justify-content-center">
+                <form 
+                    action="#"
+                    th:action="@{/task}" 
+                    th:object="${todomodel}" 
+                    method="post"
+                >
+                <!-- th:action="@{/task}" means that the "Add" button will look for the 
+                    PostMapping("/task") method -->
+
+                <label class="form-label"><b>Task:</b></label>
+
+                <div class="input-group">
+                    <input type="text" class="form-control" th:field="*{task}"
+                        placeholder="Enter your task here" size="80">
+                    <input type="hidden" th:field="*{userName}">
+                    <input type="hidden" th:field="*{listOfTasks}">
+
+                    <button type="submit" class="btn btn-primary" 
+                        style="background-color:darkred"><b>Add</b></button>
+                </div>
+            </div>
+        </div>
+        <!-- Take note that th:field is sensitive not only to the variable name, but to 
+        the getter and setter names as well -->
+
+        <div class="row mt-1">
+            <div class="col d-flex justify-content-center">
+                <span th:text="${msg}"></span>
+            </div>
+        </div>
+
+        <div class="row mt-5 mb-3">
+            <div class="col d-flex justify-content-center">
+                <h2 data-th-if="${contents == null or contents.empty}"> 
+                    There are no tasks that needs to be done</h2>
+
+                <div data-th-if="${!contents.empty}">
+                    <div style="display: table-row">
+                        <div style="width: 520px; display: table-cell;">
+                            <table style="background-color:whitesmoke; width:500px">
+                                <tr>
+                                    <th style="text-align:center; font-size: 1.5em">
+                                        List of your tasks</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <ol>
+                                            <span th:each="t : ${contents}">
+                                                <li th:text="${t}"></li>
+                                            </span>
+                                        </ol>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:center">
+                                        <button type="submit" class="btn btn-primary" 
+                                        style="background-color: darkgreen" formmethod="POST" 
+                                        formaction="/task/list"><b>Save</b></button>                                   
+                                    </td>
+                                </tr>
+                            </table>    
+                        </div>
+
+                        <div style="display: table-cell; vertical-align: bottom;"> 
+                            <button type="submit" class="btn btn-primary" style="background-color: 
+                                black" formmethod="POST" formaction="/task/empty">
+                                <span style="font-size: x-small; display: flex;">
+                                Clear</button></span>
+                        </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+
+</body>
+</html>
